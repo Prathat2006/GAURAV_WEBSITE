@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall of Love</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: rgb(254 242 242);
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            background-color: rgb(254 242 242);
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+
+        .header {
+            padding: 2rem;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(254 242 242);
+            z-index: 1000;
+        }
+
+        .title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: rgb(219 39 119);
+            margin-bottom: 2rem;
+        }
+
+        .notes-container {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 1rem;
+            min-width: max-content;
+            margin-top: 12rem;
+        }
+
+        .note {
+            position: relative;
+            background-color: #FFB6C1;
+            padding: 20px;
+            margin: 20px;
+            width: 300px;
+            height: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: rotate(-10deg);
+        }
+
+        .note-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .note-text {
+            text-align: center;
+        }
+
+        .from-name {
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .to-name {
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .message {
+            font-style: italic;
+            font-size: 0.875rem;
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 96px;
+            height: 96px;
+            border-radius: 9999px;
+            padding: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 1100;
+        }
+
+        .add-button:hover {
+            animation: beat 0.5s infinite;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            width: 24rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgb(219 39 119);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            box-sizing: border-box;
+        }
+
+        .form-textarea {
+            height: 6rem;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .button-cancel {
+            color: rgb(75 85 99);
+        }
+
+        .button-cancel:hover {
+            background-color: rgb(243 244 246);
+        }
+
+        .button-submit {
+            background-color: rgb(219 39 119);
+            color: white;
+        }
+
+        .button-submit:hover {
+            background-color: rgb(190 24 93);
+        }
+
+        #heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff99cc;
+            font-size: 20px;
+            animation: fall 5s linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgb(254 242 242);
+            text-align: center;
+            padding: 2rem;
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: rgb(219 39 119);
+            z-index: 1000;
+        }
+
+        .quote {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Wall of Love 💕</h1>
+        </header>
+        
+        <div class="notes-container" id="notesContainer"></div>
+
+        <img src="/api/placeholder/96/96" alt="Add" class="add-button" onclick="showModal()">
+
+        <div class="modal" id="addNoteModal">
+            <div class="modal-content">
+                <h2 class="modal-title">Add Your Love Note</h2>
+                <form id="noteForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-input" id="fromName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">To (Optional)</label>
+                        <input type="text" class="form-input" id="toName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Message</label>
+                        <textarea class="form-input form-textarea" id="message" required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="button button-cancel" onclick="hideModal()">Cancel</button>
+                        <button type="submit" class="button button-submit">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="heart-container"></div>
+
+    <footer class="footer">
+        <p id="quote" class="quote"></p>
+    </footer>
+
+    <script>
+        // Initial notes data
+        const initialNotes = [
+            {
+                fromName: "Alex",
+                toName: "Sarah",
+                message: "Every day with you is Valentine's Day ❤️",
+                color: "#FFB6C1",
+                rotation: -2.5
+            },
+            {
+                fromName: "Jamie",
+                message: "Spreading love to everyone!",
+                color: "#FFC0CB",
+                rotation: 3.2
+            },
+            {
+                fromName: "Chris",
+                toName: "Pat",
+                message: "You make my heart skip a beat 💕",
+                color: "#FFE4E1",
+                rotation: 1.8
+            }
+        ];
+
+        // Utility functions
+        function getRandomRotation() {
+            return Math.random() * 10 - 5;
+        }
+
+        function getRandomColor() {
+            const colors = ['#FFB6C1', '#FFC0CB', '#FFE4E1', '#FFF0F5', '#FFB6C1'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Local Storage functions
+        function saveNotes(notes) {
+            localStorage.setItem('loveNotes', JSON.stringify(notes));
+        }
+
+        function loadNotes() {
+            const saved = localStorage.getItem('loveNotes');
+            if (!saved) {
+                saveNotes(initialNotes);
+                return initialNotes;
+            }
+            return JSON.parse(saved);
+        }
+
+        // Modal functions
+        function showModal() {
+            document.getElementById('addNoteModal').classList.add('show');
+        }
+
+        function hideModal() {
+            document.getElementById('addNoteModal').classList.remove('show');
+        }
+
+        // Note rendering
+        function renderNote(note) {
+            if (!note.fromName || !note.message) {
+                console.error('Invalid note data:', note);
+                return;
+            }
+
+            const noteElement = document.createElement('div');
+            noteElement.className = 'note';
+            noteElement.style.backgroundColor = note.color || getRandomColor();
+            noteElement.style.transform = `rotate(${note.rotation || getRandomRotation()}deg)`;
+
+            noteElement.innerHTML = `
+                <div class="note-content">
+                    <div class="note-text">
+                        <p class="from-name">${note.fromName}</p>
+                        ${note.toName ? `<p class="to-name">To: ${note.toName}</p>` : ''}
+                        <p class="message">${note.message}</p>
+                    </div>
+                    <i data-lucide="heart" style="color: rgb(239 68 68)"></i>
+                </div>
+            `;
+
+            const notesContainer = document.getElementById('notesContainer');
+            notesContainer.insertBefore(noteElement, notesContainer.firstChild);
+        }
+
+        // Form handling
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const wordCount = message.trim().split(/\s+/).length;
+
+            if (wordCount > 50) {
+                alert('Your message cannot exceed 50 words.');
+                return;
+            }
+
+            const newNote = {
+                fromName: document.getElementById('fromName').value,
+                toName: document.getElementById('toName').value,
+                message: message,
+                color: getRandomColor(),
+                rotation: getRandomRotation()
+            };
+
+            const notes = loadNotes();
+            notes.push(newNote);
+            saveNotes(notes);
+            renderNote(newNote);
+            event.target.reset();
+            hideModal();
+        }
+
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+
+            document.getElementById("heart-container").appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        function startHeartRain() {
+            setInterval(() => {
+                const heartCount = Math.floor(Math.random() * 4) + 2;
+                for (let i = 0; i < heartCount; i++) {
+                    createHeart();
+                }
+            }, Math.random() * 2000 + 1000);
+        }
+
+        // Quotes
+        const quotes = [
+            "\"Every note here is a heartbeat, whispering love into eternity.\" ❤️.",
+            "\"Love leaves a mark, and this wall is filled with its sweetest imprints.\" 💕.",
+            "\"Every love note here is a star in the sky of someone's heart.\" 🌟",
+            "\"Some love stories are told in notes; let yours be one of them.\" ✍️",
+            "\"This wall is a symphony of love notes, each a melody of the heart.\" 🎶",
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function showNextQuote() {
+            const quoteElement = document.getElementById('quote');
+            quoteElement.style.opacity = 0;
+
+            setTimeout(() => {
+                quoteElement.textContent = quotes[currentQuoteIndex];
+                quoteElement.style.opacity = 1;
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            }, 500);
+        }
+
+        // Initialize everything
+        window.onload = () => {
+            const notes = loadNotes();
+            notes.forEach(renderNote);
+            startHeartRain();
+            showNextQuote();
+            setInterval(showNextQuote, 5000);
+        };
+    </script>
+</body>
+</html>

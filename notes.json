@@ -1,6 +1,1 @@
-[
-    {"fromName": "Alex", "toName": "Sarah", "message": "Every day with you is Valentine's Day \u2764\ufe0f", "color": "#FFB6C1", "rotation": -2.5}, 
-    {"fromName": "Jamie", "message": "Spreading love to everyone!", "color": "#FFC0CB", "rotation": 3.2}, 
-    {"fromName": "Chris", "toName": "Pat", "message": "You make my heart skip a beat \ud83d\udc95", "color": "#FFE4E1", "rotation": 1.8}, 
-    {"fromName": "Ubaid", "toName": "Adiba", "message": "I love from my heart", "color": "#FFC0CB", "rotation": 1.1341209425943717}
-]
+[{"fromName": "Alex", "toName": "Sarah", "message": "Every day with you is Valentine's Day \u2764\ufe0f", "color": "#FFB6C1", "rotation": -2.5}, {"fromName": "Jamie", "message": "Spreading love to everyone!", "color": "#FFC0CB", "rotation": 3.2}, {"fromName": "Chris", "toName": "Pat", "message": "You make my heart skip a beat \ud83d\udc95", "color": "#FFE4E1", "rotation": 1.8}, {"fromName": "Ubaid", "toName": "Adiba", "message": "I love from my heart", "color": "#FFC0CB", "rotation": 1.1341209425943717}]
