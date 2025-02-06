@@ -90,6 +90,7 @@ body {
     border: none;
     cursor: pointer;
     transition: transform 0.3s;
+    z-index: 1100; /* Ensure it is above all other elements */
 }
 
 .add-button:hover {
@@ -227,4 +228,19 @@ body {
     transform: rotate(-10deg); /* More tilted and reversed direction */
 }
 
-/* Removed .note::before and .note::after rules */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(254 242 242); /* Match the background color */
+    text-align: center;
+    padding: 2rem; /* Increased padding */
+    font-size: 2.25rem; /* Increased font size */
+    font-weight: bold; /* Make text bold */
+    color: rgb(219 39 119); /* Match header color */
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+.quote {
+    transition: opacity 0.5s ease-in-out;
+}

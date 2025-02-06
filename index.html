@@ -44,6 +44,11 @@
 
     <div id="heart-container"></div> <!-- Add heart container -->
 
+    <!-- Add footer for quotes -->
+    <footer class="footer">
+        <p id="quote" class="quote"></p>
+    </footer>
+
     <script>
         // Initialize Lucide icons
         // lucide.createIcons();
@@ -182,10 +187,35 @@
             }, Math.random() * 2000 + 1000); // Interval (1s - 3s) for more frequent rain
         }
 
+        // Quotes array
+        const quotes = [
+            "\"Every note here is a heartbeat, whispering love into eternity.\" ❤️.",
+            "\"Love leaves a mark, and this wall is filled with its sweetest imprints.\" 💕.",
+            "\"Every love note here is a star in the sky of someone’s heart.\" 🌟",
+            "\"Some love stories are told in notes; let yours be one of them.\" ✍️",
+            "\"This wall is a symphony of love notes, each a melody of the heart.\" 🎶",
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function showNextQuote() {
+            const quoteElement = document.getElementById('quote');
+            quoteElement.style.opacity = 0; // Start fade out
+
+            setTimeout(() => {
+                quoteElement.textContent = quotes[currentQuoteIndex];
+                quoteElement.style.opacity = 1; // Fade in
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            }, 500); // Wait for fade out to complete
+        }
+
+        setInterval(showNextQuote, 5000); // Change quote every 5 seconds
+
         // Load notes when page loads
         window.onload = () => {
             loadNotes();
             startHeartRain(); // Start heart rain on page load
+            showNextQuote(); // Show the first quote
         };
     </script>
 </body>
