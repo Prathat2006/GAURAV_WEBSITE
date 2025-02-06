@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall of Love</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Wall of Love 💕</h1>
+        </header>
+        
+        <div class="notes-container" id="notesContainer"></div>
+
+        <img src="hi.png" alt="Add" class="add-button" onclick="showModal()" style="width: 48px; height: 48px; cursor: pointer;">
+
+        <div class="modal" id="addNoteModal">
+            <div class="modal-content">
+                <h2 class="modal-title">Add Your Love Note</h2>
+                <form id="noteForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-input" id="fromName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">To (Optional)</label>
+                        <input type="text" class="form-input" id="toName">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Message</label>
+                        <textarea class="form-input form-textarea" id="message" required></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" class="button button-cancel" onclick="hideModal()">Cancel</button>
+                        <button type="submit" class="button button-submit">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        // lucide.createIcons();
+
+        // Utility functions
+        function getRandomRotation() {
+            return Math.random() * 10 - 5;
+        }
+
+        function getRandomColor() {
+            const colors = ['#FFB6C1', '#FFC0CB', '#FFE4E1', '#FFF0F5', '#FFB6C1'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Modal functions
+        function showModal() {
+            document.getElementById('addNoteModal').classList.add('show');
+        }
+
+        function hideModal() {
+            document.getElementById('addNoteModal').classList.remove('show');
+        }
+
+        // Note rendering
+        function renderNote(note) {
+            if (!note.fromName || !note.message) {
+                console.error('Invalid note data:', note);
+                return;
+            }
+
+            const noteElement = document.createElement('div');
+            noteElement.className = 'note-card';
+            noteElement.style.backgroundColor = note.color || getRandomColor();
+            noteElement.style.transform = `rotate(${note.rotation || getRandomRotation()}deg)`;
+
+            noteElement.innerHTML = `
+                <div class="note-content">
+                    <div class="note-text">
+                        <p class="from-name">${note.fromName}</p>
+                        ${note.toName ? `<p class="to-name">To: ${note.toName}</p>` : ''}
+                        <p class="message">${note.message}</p>
+                    </div>
+                    <i data-lucide="heart" style="color: rgb(239 68 68)"></i>
+                </div>
+            `;
+
+            document.getElementById('notesContainer').appendChild(noteElement);
+        }
+
+        // Form handling
+        async function handleSubmit(event) {
+            event.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const wordCount = message.trim().split(/\s+/).length;
+
+            if (wordCount > 50) {
+                alert('Your message cannot exceed 50 words.');
+                return;
+            }
+
+            const newNote = {
+                fromName: document.getElementById('fromName').value,
+                toName: document.getElementById('toName').value,
+                message: message,
+                color: getRandomColor(),
+                rotation: getRandomRotation()
+            };
+
+            try {
+                const response = await fetch('/api/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newNote)
+                });
+
+                if (response.ok) {
+                    renderNote(newNote);
+                    event.target.reset();
+                    hideModal();
+                }
+            } catch (error) {
+                console.error('Error adding note:', error);
+            }
+        }
+
+        // Initial load
+        async function loadNotes() {
+            try {
+                const response = await fetch('/api/notes');
+                if (!response.ok) {
+                    console.error('Failed to fetch notes:', response.status, response.statusText);
+                    return;
+                }
+                const notes = await response.json();
+                // Clear existing notes before rendering
+                document.getElementById('notesContainer').innerHTML = '';
+                notes.forEach(renderNote);
+            } catch (error) {
+                console.error('Error loading notes:', error);
+            }
+        }
+
+        // Load notes when page loads
+        window.onload = loadNotes;
+    </script>
+</body>
+</html>
