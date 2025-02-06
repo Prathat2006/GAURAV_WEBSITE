@@ -215,3 +215,16 @@ body {
         opacity: 0;
     }
 }
+
+.note {
+    position: relative;
+    background-color: #FFB6C1; /* Default color */
+    padding: 20px;
+    margin: 20px;
+    width: 300px; /* Increased width */
+    height: 300px; /* Increased height */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: rotate(-10deg); /* More tilted and reversed direction */
+}
+
+/* Removed .note::before and .note::after rules */

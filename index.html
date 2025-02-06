@@ -42,6 +42,8 @@
         </div>
     </div>
 
+    <div id="heart-container"></div> <!-- Add heart container -->
+
     <script>
         // Initialize Lucide icons
         // lucide.createIcons();
@@ -73,7 +75,7 @@
             }
 
             const noteElement = document.createElement('div');
-            noteElement.className = 'note-card';
+            noteElement.className = 'note';
             noteElement.style.backgroundColor = note.color || getRandomColor();
             noteElement.style.transform = `rotate(${note.rotation || getRandomRotation()}deg)`;
 
@@ -88,7 +90,8 @@
                 </div>
             `;
 
-            document.getElementById('notesContainer').appendChild(noteElement);
+            const notesContainer = document.getElementById('notesContainer');
+            notesContainer.insertBefore(noteElement, notesContainer.firstChild); // Prepend new note
         }
 
         // Form handling
@@ -146,43 +149,44 @@
                 console.error('Error loading notes:', error);
             }
         }
+
         function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "❤️"; // Heart emoji
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️"; // Heart emoji
 
-  // Random position from left
-  heart.style.left = Math.random() * 100 + "vw";
+            // Random position from left
+            heart.style.left = Math.random() * 100 + "vw";
 
-  // Random size
-  heart.style.fontSize = Math.random() * 20 + 10 + "px";
+            // Random size
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
 
-  // Random animation duration for variety
-  heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+            // Random animation duration for variety
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
 
-  document.getElementById("heart-container").appendChild(heart);
+            document.getElementById("heart-container").appendChild(heart);
 
-  // Remove heart after animation ends
-  setTimeout(() => {
-    heart.remove();
-  }, 5000);
-}
+            // Remove heart after animation ends
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
 
-// Increased frequency of heart rain
-function startHeartRain() {
-  setInterval(() => {
-    const heartCount = Math.floor(Math.random() * 4) + 2; // Generate 2-5 hearts per interval
-    for (let i = 0; i < heartCount; i++) {
-      createHeart();
-    }
-  }, Math.random() * 2000 + 1000); // Interval (1s - 3s) for more frequent rain
-}
-
-startHeartRain();
-
+        // Increased frequency of heart rain
+        function startHeartRain() {
+            setInterval(() => {
+                const heartCount = Math.floor(Math.random() * 4) + 2; // Generate 2-5 hearts per interval
+                for (let i = 0; i < heartCount; i++) {
+                    createHeart();
+                }
+            }, Math.random() * 2000 + 1000); // Interval (1s - 3s) for more frequent rain
+        }
 
         // Load notes when page loads
-        window.onload = loadNotes;
+        window.onload = () => {
+            loadNotes();
+            startHeartRain(); // Start heart rain on page load
+        };
     </script>
 </body>
 </html>

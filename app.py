@@ -63,6 +63,7 @@ def serve_static():
 @app.route('/style.css')
 def serve_css():
     return send_from_directory('.', 'style.css')
+
 @app.route('/hi.png')
 def serve_image():
     return send_from_directory('.', 'hi.png')
