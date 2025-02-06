@@ -2,16 +2,27 @@ body {
     margin: 0;
     font-family: system-ui, -apple-system, sans-serif;
     background-color: rgb(254 242 242); /* Set background color for the entire body */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Disable vertical scrolling */
 }
 
 .container {
     min-height: 100vh;
     background-color: rgb(254 242 242); /* Ensure the container has the same background color */
+    display: flex;
+    flex-direction: row; /* Arrange children in a row */
+    flex-wrap: nowrap; /* Prevent wrapping to new lines */
 }
 
 .header {
     padding: 2rem;
     text-align: center;
+    position: fixed; /* Fix the position of the header */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgb(254 242 242); /* Match the background color */
+    z-index: 1000; /* Ensure it stays on top */
 }
 
 .title {
@@ -23,10 +34,10 @@ body {
 
 .notes-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap; /* Prevent wrapping to new lines */
     padding: 1rem;
     min-width: max-content;
+    margin-top: 12rem; /* Increase margin to move notes lower */
 }
 
 .note-card {
@@ -184,24 +195,23 @@ body {
     height: 100%;
     pointer-events: none;
     overflow: hidden;
-  }
-  
-  .heart {
+}
+
+.heart {
     position: absolute;
     color: #ff99cc; /* Soft pink */
     font-size: 20px;
     animation: fall 5s linear infinite;
     opacity: 0.8;
-  }
-  
-  @keyframes fall {
+}
+
+@keyframes fall {
     0% {
-      transform: translateY(-10vh) scale(0.8);
-      opacity: 1;
+        transform: translateY(-10vh) scale(0.8);
+        opacity: 1;
     }
     100% {
-      transform: translateY(100vh) scale(1);
-      opacity: 0;
+        transform: translateY(100vh) scale(1);
+        opacity: 0;
     }
-  }
-  
+}
